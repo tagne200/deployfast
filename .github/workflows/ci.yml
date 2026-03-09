@@ -1,0 +1,83 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Cache Maven local repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2-
+
+      - name: Build & run tests
+        run: |
+          chmod +x mvnw
+          ./mvnw clean verify jacoco:report
+
+      - name: OWASP Dependency-Check
+        run: |
+          ./mvnw org.owasp:dependency-check-maven:check -Dformat=HTML -DoutputDirectory=dependency-check-report
+        continue-on-error: true
+
+      - name: Build Docker image
+        run: |
+          docker build -t deployfast-taskmanagement:latest .
+
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@v0.1.0
+        with:
+          image-ref: deployfast-taskmanagement:latest
+
+      - name: Scan repository for secrets
+        uses: trufflesecurity/trufflehog@v3.13.0
+        with:
+          path: .
+
+      - name: SonarCloud analysis
+        uses: SonarSource/sonarcloud-github-action@v1.11
+        with:
+          projectKey: deployfast-taskmanagement
+          organization: my-org
+          token: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Upload Jacoco report as artifact
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-report
+          path: target/site/jacoco
+
+  sonar-quality-gate:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Wait for Sonar quality gate
+        uses: SonarSource/sonarcloud-github-action@v1.11
+        with:
+          projectKey: deployfast-taskmanagement
+          organization: my-org
+          token: ${{ secrets.SONAR_TOKEN }}
+          waitForQualityGate: true

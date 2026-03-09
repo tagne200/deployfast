@@ -1,0 +1,53 @@
+# Maven
+target/
+.m2/
+*.jar
+*.war
+*.zip
+*.tar.gz
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.classpath
+*.project
+*.settings/
+*.launch
+.DS_Store
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Java
+*.class
+*.log
+*.ctxt
+.mtj.tmp/
+*.jar
+*.jar
+*,nar
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+
+# Gradle
+.gradle/
+build/
+
+# Misc
+dist/
+build/
+*.bak
+*.orig
+~*
+
+# JaCoCo
+*.exec
+site/
+
+# Tests
+.surefire_report/
