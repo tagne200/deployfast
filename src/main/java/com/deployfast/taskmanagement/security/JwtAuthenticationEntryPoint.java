@@ -44,6 +44,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         log.error("Erreur d'authentification: {}", authException.getMessage());
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         final GlobalExceptionHandler.ErrorResponse errorResponse = GlobalExceptionHandler.ErrorResponse.builder()
