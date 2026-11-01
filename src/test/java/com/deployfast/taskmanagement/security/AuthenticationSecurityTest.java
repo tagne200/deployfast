@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -21,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 @DisplayName("Authentication Security Tests")
 class AuthenticationSecurityTest {
 
@@ -53,7 +55,7 @@ class AuthenticationSecurityTest {
     @DisplayName("Devrait enregistrer un nouvel utilisateur - 201 Created")
     void testRegisterSuccess() throws Exception {
         // Act & Assert
-        mockMvc.perform(post("/api/v1/auth/register")
+        mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isCreated())
@@ -68,13 +70,13 @@ class AuthenticationSecurityTest {
     @DisplayName("Devrait rejeter l'enregistrement avec email existant - 409 Conflict")
     void testRegisterDuplicateEmail() throws Exception {
         // Arrange - Enregistrer d'abord
-        mockMvc.perform(post("/api/v1/auth/register")
+        mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isCreated());
 
         // Act & Assert - Essayer d'enregistrer avec le même email
-        mockMvc.perform(post("/api/v1/auth/register")
+        mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isConflict());
@@ -84,7 +86,7 @@ class AuthenticationSecurityTest {
     @DisplayName("Devrait rejeter la connexion avec mauvais mot de passe - 401 Unauthorized")
     void testLoginInvalidPassword() throws Exception {
         // Arrange - Enregistrer d'abord
-        mockMvc.perform(post("/api/v1/auth/register")
+        mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isCreated());
@@ -95,7 +97,7 @@ class AuthenticationSecurityTest {
                 .password("WrongPassword123!")
                 .build();
 
-        mockMvc.perform(post("/api/v1/auth/login")
+        mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalidLogin)))
                 .andExpect(status().isUnauthorized());
@@ -105,13 +107,13 @@ class AuthenticationSecurityTest {
     @DisplayName("Devrait connecter l'utilisateur avec succès - 200 OK")
     void testLoginSuccess() throws Exception {
         // Arrange - Enregistrer d'abord
-        mockMvc.perform(post("/api/v1/auth/register")
+        mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isCreated());
 
         // Act & Assert - Connexion réussie
-        mockMvc.perform(post("/api/v1/auth/login")
+        mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
@@ -124,7 +126,7 @@ class AuthenticationSecurityTest {
     @DisplayName("Devrait rejeter les requêtes non authentifiées - 401 Unauthorized")
     void testAccessProtectedEndpointWithoutToken() throws Exception {
         // Act & Assert
-        mockMvc.perform(get("/api/v1/tasks"))
+        mockMvc.perform(get("/tasks"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -132,7 +134,7 @@ class AuthenticationSecurityTest {
     @DisplayName("Devrait rejeter les requêtes avec token invalide - 401 Unauthorized")
     void testAccessProtectedEndpointWithInvalidToken() throws Exception {
         // Act & Assert
-        mockMvc.perform(get("/api/v1/tasks")
+        mockMvc.perform(get("/tasks")
                 .header("Authorization", "Bearer invalidtoken"))
                 .andExpect(status().isUnauthorized());
     }
@@ -150,7 +152,7 @@ class AuthenticationSecurityTest {
                 .build();
 
         // Act & Assert
-        mockMvc.perform(post("/api/v1/auth/register")
+        mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(weakPassword)))
                 .andExpect(status().isBadRequest());
@@ -160,7 +162,7 @@ class AuthenticationSecurityTest {
     @DisplayName("Devrait permettre l'accès à la santé sans authentification")
     void testHealthEndpointNoAuth() throws Exception {
         // Act & Assert
-        mockMvc.perform(get("/api/v1/auth/health"))
+        mockMvc.perform(get("/auth/health"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("DeployFast Task Management API is running!"));
     }

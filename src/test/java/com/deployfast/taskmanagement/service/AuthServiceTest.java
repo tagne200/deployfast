@@ -96,7 +96,6 @@ class AuthServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(testUser);
 
         Authentication authentication = mock(Authentication.class);
-        when(authentication.getName()).thenReturn("testuser");
         when(authenticationManager.authenticate(any())).thenReturn(authentication);
 
         when(jwtTokenProvider.generateAccessToken(authentication)).thenReturn("accessToken");

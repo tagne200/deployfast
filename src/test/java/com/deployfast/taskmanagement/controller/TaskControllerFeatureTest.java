@@ -78,7 +78,7 @@ class TaskControllerFeatureTest {
         when(taskService.createTask(any(CreateTaskRequest.class))).thenReturn(taskDto);
 
         // Act & Assert
-        mockMvc.perform(post("/api/v1/tasks")
+        mockMvc.perform(post("/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createTaskRequest)))
                 .andExpect(status().isCreated())
@@ -93,7 +93,7 @@ class TaskControllerFeatureTest {
     @DisplayName("Devrait retourner 401 sans authentification")
     void testCreateTaskUnauthorized() throws Exception {
         // Act & Assert
-        mockMvc.perform(post("/api/v1/tasks")
+        mockMvc.perform(post("/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createTaskRequest)))
                 .andExpect(status().isUnauthorized());
@@ -108,7 +108,7 @@ class TaskControllerFeatureTest {
         when(taskService.getAllTasks(any())).thenReturn(taskPage);
 
         // Act & Assert
-        mockMvc.perform(get("/api/v1/tasks?page=0&size=10")
+        mockMvc.perform(get("/tasks?page=0&size=10")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
@@ -127,7 +127,7 @@ class TaskControllerFeatureTest {
         when(taskService.getTaskById(1L)).thenReturn(taskDto);
 
         // Act & Assert
-        mockMvc.perform(get("/api/v1/tasks/1")
+        mockMvc.perform(get("/tasks/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
@@ -144,7 +144,7 @@ class TaskControllerFeatureTest {
         String invalidPayload = "{\"description\": \"No title\"}";
 
         // Act & Assert
-        mockMvc.perform(post("/api/v1/tasks")
+        mockMvc.perform(post("/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(invalidPayload))
                 .andExpect(status().isBadRequest());

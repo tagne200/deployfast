@@ -95,19 +95,19 @@ public class SecurityConfig {
             // Configuration des autorisations d'accès
             .authorizeHttpRequests(authz -> authz
                 // Endpoints publics (sans authentification)
-                .requestMatchers("/api/v1/auth/register").permitAll()
-                .requestMatchers("/api/v1/auth/login").permitAll()
-                .requestMatchers("/api/v1/auth/refresh").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/health").permitAll()
+                .requestMatchers("/auth/register").permitAll()
+                .requestMatchers("/auth/login").permitAll()
+                .requestMatchers("/auth/refresh").permitAll()
+                .requestMatchers(HttpMethod.GET, "/auth/health").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
 
                 // Endpoints Admin
-                .requestMatchers(HttpMethod.GET, "/api/v1/admin/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
 
                 // Endpoints User (authentifiés)
-                .requestMatchers("/api/v1/tasks/**").authenticated()
-                .requestMatchers("/api/v1/users/**").authenticated()
+                .requestMatchers("/tasks/**").authenticated()
+                .requestMatchers("/users/**").authenticated()
 
                 // Tous les autres requêtes nécessitent l'authentification
                 .anyRequest().authenticated()
