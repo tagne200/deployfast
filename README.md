@@ -326,3 +326,7 @@ DeployFast © 2024. Tous droits réservés.
 ## Support
 
 Pour les issues ou questions, consulter [ARCHITECTURE.md](ARCHITECTURE.md) pour la conception détaillée.
+
+## Documentation détaillée
+
+Consultez [docs/DOCUMENTATION.md](docs/DOCUMENTATION.md) pour une vue d'ensemble à jour : configuration réelle, liste des routes, tests et pipeline.
