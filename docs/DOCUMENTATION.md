@@ -104,8 +104,8 @@ Il utilise notamment les secrets `DOCKER_USERNAME` et `DOCKER_TOKEN`.
 
 ## 9. Points d'attention
 
-- `README.md` mentionne à la fois MySQL et PostgreSQL, alors que la configuration par défaut utilise H2. Référez-vous à la section 4.
-- Le Dockerfile utilise une image JDK 21, alors que le projet cible Java 17.
+- Les chemins de sécurité sont relatifs au préfixe `/api/v1` : écrivez `/auth/login`, pas `/api/v1/auth/login`, dans `SecurityConfig` et dans les tests MockMvc.
+- Le projet, le compilateur Maven et l'image Docker utilisent tous Java 17.
 
 ## 10. Autres documents
 

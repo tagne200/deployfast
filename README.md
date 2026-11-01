@@ -1,6 +1,6 @@
 # DeployFast Task Management API
 
-API REST sécurisée pour la gestion des tâches, développée avec Spring Boot 3.2, JWT et PostgreSQL.
+API REST sécurisée pour la gestion des tâches, développée avec Spring Boot 3.2, JWT et JPA (H2 par défaut, MySQL ou PostgreSQL en option).
 
 ## Vue d'ensemble
 
@@ -33,16 +33,16 @@ src/test/java/           # Tests unitaires et Feature
 
 - **Java 17+** (la compilation cible Java 17 ; si vous voyez l'erreur "release version 17 not supported", installez JDK 17 et mettez à jour la variable d'environnement `JAVA_HOME` ou utilisez le wrapper `./mvnw`)
 - **Maven 3.8+** (ou utilisez le wrapper `mvnw` inclus)
-- **MySQL 8.0+** (ou MariaDB) avec phpMyAdmin pour la gestion
+- **Aucune base à installer pour démarrer** : H2 en mémoire par défaut (MySQL 8.0+ ou PostgreSQL en option)
 
-> **Configuration base de données** : L'application utilise une base MySQL locale nommée `deployfast`. Assurez-vous que MySQL est installé et que la base `deployfast` existe (elle sera créée automatiquement si elle n'existe pas).
+> **Configuration base de données** : sans variable d'environnement, l'application utilise H2 en mémoire et les données sont perdues à l'arrêt. Pour conserver les données, renseignez les variables `SPRING_DATASOURCE_*` de `.env.example`.
 
 ## Installation
 
 ### 1. Cloner le repository
 ```bash
-git clone <repository>
-cd deployfast-task-management-api
+git clone https://github.com/tagne200/deployfast.git
+cd deployfast
 ```
 
 ### 2. Configurer les variables d'environnement
