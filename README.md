@@ -91,7 +91,7 @@ Un workflow GitHub Actions est déjà fourni dans `.github/workflows/ci.yml`. Il
 5. La construction d'une image Docker (`Dockerfile` présent à la racine)
 6. Le scan de cette image via Trivy
 7. La recherche de secrets avec TruffleHog
-8. L'analyse dans SonarQube/SonarCloud (nécessite un secret `SONAR_TOKEN`)
+8. L'analyse SonarCloud n'est pas active dans le pipeline : elle demande une organisation et un secret `SONAR_TOKEN`
 
 Aucune intervention manuelle n'est requise : la CI est entièrement automatisée. Configurez `SONAR_TOKEN` et, si nécessaire, `SONAR_HOST_URL` en tant que secrets dans GitHub pour activer l'étape Sonar.
 

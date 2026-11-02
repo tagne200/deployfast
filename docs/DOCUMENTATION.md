@@ -98,9 +98,9 @@ docker run -p 8080:8080 -e JWT_SECRET=VOTRE_SECRET deployfast-taskmanagement
 
 ## 8. Pipeline CI/CD
 
-Le workflow `.github/workflows/ci.yml` se déclenche sur un push ou une pull request vers `main`. Il enchaîne les tests et JaCoCo, OWASP Dependency-Check, la construction de l'image Docker, sa publication sur Docker Hub (push sur `main` uniquement), le scan Trivy, la recherche de secrets et l'analyse SonarCloud.
+Le workflow `.github/workflows/ci.yml` se déclenche sur un push ou une pull request vers `main`. Il enchaîne les tests et JaCoCo, OWASP Dependency-Check, la recherche de secrets, la construction de l'image Docker et le scan Trivy. Sur un push vers `main`, il publie ensuite l'image sur Docker Hub.
 
-Il utilise notamment les secrets `DOCKER_USERNAME` et `DOCKER_TOKEN`.
+Il utilise les secrets `DOCKERHUB_USERNAME` et `DOCKERHUB_TOKEN`. L'analyse SonarCloud n'est pas active : elle demanderait une organisation et un secret `SONAR_TOKEN`.
 
 ## 9. Points d'attention
 
