@@ -12,6 +12,7 @@ import com.deployfast.taskmanagement.exception.ResourceNotFoundException;
 import com.deployfast.taskmanagement.exception.BusinessValidationException;
 import com.deployfast.taskmanagement.repository.TaskRepository;
 import com.deployfast.taskmanagement.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -92,6 +93,11 @@ class TaskServiceTest {
 
         // Setup SecurityContext
         mockSecurityContext();
+    }
+
+    @AfterEach
+    void clearSecurityContext() {
+        SecurityContextHolder.clearContext();
     }
 
     private void mockSecurityContext() {
