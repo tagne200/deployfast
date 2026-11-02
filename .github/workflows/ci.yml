@@ -64,6 +64,9 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
-          docker tag deployfast-taskmanagement:latest ${{ secrets.DOCKERHUB_USERNAME }}/deployfast-taskmanagement:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/deployfast-taskmanagement:latest
+          IMAGE="$(printf '%s' "$DOCKERHUB_USERNAME" | tr -d '[:space:]')/deployfast-taskmanagement:latest"
+          docker tag deployfast-taskmanagement:latest "$IMAGE"
+          docker push "$IMAGE"
